@@ -55,17 +55,21 @@ ora-space-site/
 ```js
 export default {
   siteUrl: 'https://oraspace.lk',  // the live address: link previews, sitemap, search engines
-  city: 'Kandy',                   // the town, added to the Google title ("…in Kandy, Sri Lanka")
   openingDate: 'Saturday, 12 December 2026',
-  address: 'No. 12, Old Lane, Kandy',
+  address: '3, Wewala, 1 Church Rd, Piliyandala 10300',  // exactly as on Google Business Profile
+  city: 'Piliyandala',             // added to the Google title ("…in Piliyandala")
   mapsUrl: 'https://maps.app.goo.gl/…',
   opensAt: 8,                      // 8.00 am, on the 24-hour clock
   closesAt: 22,                    // 10.00 pm
-  hours: 'Daily, 8.00 am to 10.00 pm',   // optional; left empty it is written from opensAt and closesAt
+  openDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],  // other days show as closed
+  hours: '',                       // optional wording; left empty it is written from the settings above
   email: 'hello@yourdomain.com',
-  phone: '+94 77 123 4567',       // also creates the WhatsApp link
-  instagram: 'ora.space',          // without the @
-  formEndpoint: 'https://formspree.io/f/xxxxxxx'
+  phone: '+94 77 483 8430',        // with +94; also makes the call and WhatsApp links
+  instagram: 'ora_space.co',       // without the @
+  facebook: 'https://www.facebook.com/…',
+  googleSiteVerification: '',      // Search Console "HTML tag" code
+  bingSiteVerification: '',        // Bing Webmaster Tools code
+  formEndpoint: 'https://formspree.io/f/xaeqbkbw'
 };
 ```
 

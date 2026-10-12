@@ -522,6 +522,7 @@ html:not(.js) .rooms__stage::before { display: none; }
 .foot__list { max-width: 22rem; }
 .foot__list span { white-space: nowrap; }
 #footContact { display: grid; justify-items: start; }
+#footContact .foot__address { margin: 0 0 .5rem; max-width: 18rem; }
 .foot__base { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 3rem; font-family: var(--f-label); font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ivory-3); }
 .foot__base p { margin: 0; }
 .foot__top-btn { display: inline-flex; align-items: center; gap: .5rem; background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: .6rem 1rem; font-family: var(--f-label); font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-lt); cursor: pointer; transition: background .3s; }

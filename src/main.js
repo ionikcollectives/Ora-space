@@ -22,7 +22,22 @@ const h12 = h => (h % 12) || 12;
 const meridiem = h => h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? 'am' : 'pm';
 const fmtLong = h => `${h12(h)}.00 ${meridiem(h)}`; // 8.00 am, 12.00 noon, 10.00 pm
 const fmtShort = h => h === 0 ? 'Midnight' : h === 12 ? 'Noon' : `${h12(h)} ${h < 12 ? 'am' : 'pm'}`; // 8 am
-const hoursLine = OPENS === CLOSES ? 'Open around the clock.' : `Open ${fmtLong(OPENS)} to ${fmtLong(CLOSES)}.`;
+// Open days: a run of days reads "Monday to Friday", others are listed ("Monday, Wednesday and Friday").
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const OPEN_DAYS = Array.isArray(CONFIG.openDays) && CONFIG.openDays.length
+  ? DAYS.filter(d => CONFIG.openDays.some(x => String(x).trim().slice(0, 3).toLowerCase() === d.slice(0, 3).toLowerCase()))
+  : DAYS;
+const CLOSED_DAYS = DAYS.filter(d => !OPEN_DAYS.includes(d));
+const dayRange = (days, short) => {
+  const name = d => (short ? d.slice(0, 3) : d);
+  const i = days.map(d => DAYS.indexOf(d));
+  if (days.length > 2 && i.every((n, k) => !k || n === i[k - 1] + 1)) return short ? `${name(days[0])}–${name(days[days.length - 1])}` : `${days[0]} to ${days[days.length - 1]}`;
+  return days.length > 1 ? `${days.slice(0, -1).map(name).join(', ')} and ${name(days[days.length - 1])}` : name(days[0]);
+};
+const openDaysText = CLOSED_DAYS.length ? dayRange(OPEN_DAYS) : 'every day';
+const closedDaysText = CLOSED_DAYS.length ? `closed on ${dayRange(CLOSED_DAYS)}` : '';
+const timesText = OPENS === CLOSES ? 'around the clock' : `${fmtLong(OPENS)} to ${fmtLong(CLOSES)}`;
+const hoursLine = `Open ${CLOSED_DAYS.length ? openDaysText + ', ' : 'every day, '}${timesText}.`;
 
 /* ---------------- Text splitting ---------------- */
 function splitWords(el) {
@@ -344,7 +359,7 @@ function setHour(h) {
     dialName.textContent = open ? m.name : 'We’re closed';
     dialText.textContent = open ? m.text : `The house is resting. The doors open again at ${fmtLong(OPENS)}.`;
     dialTags.textContent = '';
-    (open ? m.space.split(' · ') : [`Open ${fmtShort(OPENS)} to ${fmtShort(CLOSES)}`]).forEach(t => dialTags.appendChild(el('span', {}, t)));
+    (open ? m.space.split(' · ') : [CLOSED_DAYS.length ? `Open ${dayRange(OPEN_DAYS, true)}` : 'Open daily', `${fmtShort(OPENS)} to ${fmtShort(CLOSES)}`]).forEach(t => dialTags.appendChild(el('span', {}, t)));
     dialCard.classList.remove('swap'); void dialCard.offsetWidth; dialCard.classList.add('swap');
     MOMENTS.forEach((x, i) => {
       momentBtns[i].setAttribute('aria-pressed', String(x === m));
@@ -527,35 +542,48 @@ function copyButton(value) {
   return b;
 }
 const handle = (CFG.instagram || '').replace(/^@/, '').trim();
-const digits = (CFG.phone || '').replace(/[^\d]/g, '');
+const digits = (CFG.phone || '').replace(/[^\d+]/g, '');
+const waDigits = digits.replace(/^\+/, '');
+const facebook = (CFG.facebook || '').trim().replace(/#$/, '');
+const link = (href, text, external = true) => el('a', external ? { href, target: '_blank', rel: 'noopener' } : { href }, text);
 if (CFG.openingDate) $('#factOpening').textContent = CFG.openingDate;
-$('#factHours').textContent = CFG.hours || (OPENS === CLOSES ? 'Open around the clock.' : `${fmtLong(OPENS)} to ${fmtLong(CLOSES)}`);
+$('#factHours').textContent = CFG.hours || (CLOSED_DAYS.length
+  ? `${openDaysText}, ${timesText}. Closed on ${dayRange(CLOSED_DAYS)}.`
+  : `Every day, ${timesText}.`);
 // the "Good to know" answers follow the same settings as the clock and the Visit details
 const place = [CFG.city, 'Sri Lanka'].filter(Boolean).join(', ');
-$('#faqHours').textContent = OPENS === CLOSES ? 'Once open, the house is open around the clock.' : `Once open, the house is open from ${fmtLong(OPENS)} to ${fmtLong(CLOSES)}.`;
-$('#faqWhere').textContent = CFG.address
-  ? `ORA Space is at ${CFG.address}, in a heritage walawwa among old trees in ${place}.`
-  : `In a heritage walawwa among old trees in ${place}. The full address goes to the Opening List first and is shared here at launch.`;
+$('#faqHours').textContent = `Once open, the house is open ${CLOSED_DAYS.length ? openDaysText + ', ' : 'every day, '}${timesText}${closedDaysText ? ', and ' + closedDaysText : ''}.`;
+const faqWhere = $('#faqWhere');
+if (CFG.address) {
+  faqWhere.textContent = `ORA Space is at ${CFG.address}, Sri Lanka${CFG.city ? ', near Colombo' : ''}: a heritage walawwa among old trees. `;
+  if (CFG.mapsUrl) faqWhere.appendChild(link(CFG.mapsUrl, 'Open it in Google Maps'));
+} else {
+  faqWhere.textContent = `In a heritage walawwa among old trees in ${place}. The full address goes to the Opening List first and is shared here at launch.`;
+}
 if (CFG.address) {
   const dd = $('#factWhere'); dd.textContent = '';
   dd.appendChild(el('span', {}, CFG.address));
-  if (CFG.mapsUrl) { dd.appendChild(document.createElement('br')); dd.appendChild(el('a', { href: CFG.mapsUrl, target: '_blank', rel: 'noopener' }, 'Open in Maps')); }
+  if (CFG.mapsUrl) { dd.appendChild(document.createElement('br')); dd.appendChild(link(CFG.mapsUrl, 'Open in Maps')); }
 }
-if (CFG.email || digits || handle) {
+if (CFG.email || digits || handle || facebook) {
   const dd = $('#factContact'); dd.textContent = '';
   const foot = $('#footContact'); foot.textContent = '';
+  if (CFG.address) foot.appendChild(el('p', { class: 'foot__address' }, CFG.address));
   if (CFG.email) {
-    const row = el('div', { class: 'row' }); row.appendChild(el('span', {}, CFG.email)); row.appendChild(copyButton(CFG.email)); dd.appendChild(row);
-    foot.appendChild(el('a', { href: 'mailto:' + CFG.email }, CFG.email));
+    const row = el('div', { class: 'row' }); row.append(link('mailto:' + CFG.email, CFG.email, false), copyButton(CFG.email)); dd.appendChild(row);
+    foot.appendChild(link('mailto:' + CFG.email, CFG.email, false));
   }
   if (digits) {
-    const row = el('div', { class: 'row' }); row.appendChild(el('span', {}, CFG.phone)); row.appendChild(copyButton(CFG.phone));
-    row.appendChild(el('a', { href: 'https://wa.me/' + digits, target: '_blank', rel: 'noopener' }, 'WhatsApp')); dd.appendChild(row);
-    foot.appendChild(el('a', { href: 'https://wa.me/' + digits, target: '_blank', rel: 'noopener' }, 'WhatsApp ' + CFG.phone));
+    const row = el('div', { class: 'row' });
+    row.append(link('tel:' + digits, CFG.phone, false), copyButton(CFG.phone), link('https://wa.me/' + waDigits, 'WhatsApp'));
+    dd.appendChild(row);
+    foot.append(link('tel:' + digits, 'Call ' + CFG.phone, false), link('https://wa.me/' + waDigits, 'WhatsApp'));
   }
-  if (handle) {
-    const row = el('div', { class: 'row' }); row.appendChild(el('a', { href: 'https://instagram.com/' + encodeURIComponent(handle), target: '_blank', rel: 'noopener' }, 'Instagram @' + handle)); dd.appendChild(row);
-    foot.appendChild(el('a', { href: 'https://instagram.com/' + encodeURIComponent(handle), target: '_blank', rel: 'noopener' }, 'Instagram @' + handle));
+  if (handle || facebook) {
+    const row = el('div', { class: 'row' });
+    if (handle) { row.appendChild(link('https://www.instagram.com/' + encodeURIComponent(handle) + '/', 'Instagram @' + handle)); foot.appendChild(link('https://www.instagram.com/' + encodeURIComponent(handle) + '/', 'Instagram @' + handle)); }
+    if (facebook) { row.appendChild(link(facebook, 'Facebook')); foot.appendChild(link(facebook, 'Facebook')); }
+    dd.appendChild(row);
   }
 }
 $('#year').textContent = String(new Date().getFullYear());

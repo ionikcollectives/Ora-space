@@ -10,13 +10,14 @@ const SITE_URL = String(site.siteUrl || '').trim().replace(/\/+$/, '');
 
 const escapeHtml = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-// Puts the town from src/config.js into the search title and descriptions ("…in Kandy, Sri Lanka").
+// Puts the town from src/config.js into the page wherever it says "in Sri Lanka": the search title gets just
+// the town ("…in Piliyandala", short enough to show in full), everything else gets "…in Piliyandala, Sri Lanka".
 function placeInTitles() {
-  const city = String(site.city || '').trim();
+  const city = escapeHtml(String(site.city || '').trim());
   return {
     name: 'ora-place-in-titles',
     transformIndexHtml: html => city
-      ? html.replace(/(<title>[^<]*|<meta (?:name="description"|property="og:description") content="[^"]*?)in Sri Lanka/g, `$1in ${escapeHtml(city)}, Sri Lanka`)
+      ? html.replace(/(<title>[^<]*)in Sri Lanka/, `$1in ${city}`).replace(/\bin Sri Lanka\b/g, `in ${city}, Sri Lanka`)
       : html
   };
 }
@@ -29,6 +30,12 @@ function structuredData() {
   const place = [String(site.city || '').trim(), 'Sri Lanka'].filter(Boolean).join(', ');
   const handle = String(site.instagram || '').replace(/^@/, '').trim();
   const hour = h => `${String(((Math.round(+h) % 24) + 24) % 24).padStart(2, '0')}:00`;
+  const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const openDays = Array.isArray(site.openDays) && site.openDays.length
+    ? DAYS.filter(d => site.openDays.some(x => String(x).trim().slice(0, 3).toLowerCase() === d.slice(0, 3).toLowerCase()))
+    : DAYS;
+  const city = String(site.city || '').trim();
+  const facebook = String(site.facebook || '').trim().replace(/#$/, '');
   const ora = {
     '@type': site.address ? ['CafeOrCoffeeShop', 'ArtGallery'] : 'Organization',
     '@id': page && `${page}#ora`,
@@ -41,18 +48,21 @@ function structuredData() {
     image: file('og-image.jpg'),
     email: site.email || undefined,
     telephone: site.phone || undefined,
-    sameAs: handle ? [`https://www.instagram.com/${handle}`] : undefined,
+    sameAs: [handle && `https://www.instagram.com/${handle}/`, facebook].filter(Boolean),
     knowsAbout: ['Café', 'Art exhibitions', 'Library', 'Recording studio', 'Film screenings', 'Live music', 'Theatre', 'Private events']
   };
   if (site.address) {
-    ora.address = { '@type': 'PostalAddress', streetAddress: site.address, addressLocality: site.city || undefined, addressCountry: 'LK' };
+    // "3, Wewala, 1 Church Rd, Piliyandala 10300" → street "3, Wewala, 1 Church Rd", town, postcode
+    const postalCode = (String(site.address).match(/(\d{5})\s*$/) || [])[1];
+    let street = String(site.address).replace(/\s*\d{5}\s*$/, '').trim();
+    if (city && street.toLowerCase().endsWith(city.toLowerCase())) street = street.slice(0, -city.length).replace(/[,\s]+$/, '');
+    ora.address = { '@type': 'PostalAddress', streetAddress: street, addressLocality: city || undefined, postalCode, addressCountry: 'LK' };
     ora.hasMap = site.mapsUrl || undefined;
     ora.servesCuisine = 'Coffee';
-    // the site gives one set of hours, so they are listed for every day of the week
     if (+site.opensAt !== +site.closesAt) {
       ora.openingHoursSpecification = [{
         '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        dayOfWeek: openDays,
         opens: hour(site.opensAt ?? 8), closes: hour(site.closesAt ?? 22)
       }];
     }
