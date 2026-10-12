@@ -1,0 +1,13 @@
+// Cloudflare deploy settings (used by `npx wrangler deploy` in Cloudflare's build).
+// The site is plain files that `npm run build` writes to dist/, so Cloudflare serves that folder as-is:
+// no server code, and the build never needs Wrangler to rewrite vite.config.js.
+{
+  // Cloudflare's builds swap in the Worker's name from the dashboard if this differs.
+  "name": "ora-space",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // a missing address shows the site's own 404 page
+    "not_found_handling": "404-page"
+  }
+}

@@ -41,6 +41,7 @@ ora-space-site/
 ├── public/             ← copied as-is into the hosted build: link-preview image, home-screen icons,
 │                         web manifest, 404 page, hosting headers
 ├── vite.config.js      ← build settings (normal and single-file) and the launch extras
+├── wrangler.jsonc      ← Cloudflare deploy settings: serve the built dist/ folder as a static site
 ├── package.json
 ├── .nvmrc              ← the Node version hosting services should build with
 └── .vscode/            ← one-click tasks and Chrome launch
@@ -118,6 +119,7 @@ npm run preview        # serves dist/ locally to check the build
 **Hosting the `dist/` folder** (all have free plans):
 
 - **Netlify Drop**: drag the `dist` folder onto [app.netlify.com/drop](https://app.netlify.com/drop).
+- **Cloudflare (connected to GitHub)**: build command `npm run build`, deploy command `npx wrangler deploy`. `wrangler.jsonc` tells Cloudflare to serve `dist` as a static site, so every push to `main` rebuilds the site.
 - **Vercel** or **Cloudflare Pages**: connect the project, build command `npm run build`, output folder `dist`.
 - **Any web host or cPanel**: upload the contents of `dist/` to `public_html`.
 
