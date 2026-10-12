@@ -1,0 +1,6 @@
+{
+  "files.exclude": { "**/node_modules": true },
+  "search.exclude": { "**/node_modules": true, "dist": true, "dist-single": true },
+  "editor.tabSize": 2,
+  "css.lint.unknownAtRules": "ignore"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ora-space-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ORA Space website: Space \u00b7 Art \u00b7 Caf\u00e9. Feel & Belong.",
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:single": "vite build --mode single",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/cinzel": "^5.1.0",
+    "@fontsource/cormorant-garamond": "^5.1.0",
+    "@fontsource/pinyon-script": "^5.1.0",
+    "three": "0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.3"
+  }
+}

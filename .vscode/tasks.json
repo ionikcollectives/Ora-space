@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ORA: Start dev server",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^x^" },
+        "background": { "activesBegin": true, "beginsPattern": "VITE", "endsPattern": "Local:" }
+      },
+      "group": { "kind": "build", "isDefault": true }
+    },
+    { "label": "ORA: Build for hosting (dist)", "type": "npm", "script": "build", "problemMatcher": [] },
+    { "label": "ORA: Build single file (dist-single)", "type": "npm", "script": "build:single", "problemMatcher": [] },
+    { "label": "ORA: Preview build", "type": "npm", "script": "preview", "isBackground": true, "problemMatcher": [] }
+  ]
+}

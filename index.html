@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ORA Space · Feel &amp; Belong</title>
+<meta name="description" content="ORA Space is a heritage house among old trees, opening soon as a home for art, music, film, books, studio work and unhurried coffee. Feel & Belong.">
+<meta name="theme-color" content="#0E2B1C">
+<meta property="og:title" content="ORA Space · Feel & Belong">
+<meta property="og:description" content="A pause, in a walawwa. Space · Art · Café. Opening soon.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="/src/images/favicon.png">
+<link rel="apple-touch-icon" href="/src/images/apple-touch-icon.png">
+<script>
+  document.documentElement.classList.add('js');
+  // If the page script can't run (blocked, or a build opened straight from disk), show the plain page instead of a stuck loader.
+  addEventListener('load', function () {
+    var r = document.documentElement;
+    if (!r.classList.contains('is-ready')) r.classList.remove('js');
+  });
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Icon sprite: line drawings in the style of the ORA posters -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-cafe" viewBox="0 0 120 120"><path pathLength="1" d="M48 20c-6 8 6 12 0 22M60 14c-6 9 6 14 0 26M72 20c-6 8 6 12 0 22M30 56H90V64C90 82 78 94 60 94S30 82 30 64ZM90 62c13 0 14 18-2 18M16 101C16 93 104 93 104 101S16 109 16 101Z"/></symbol>
+    <symbol id="i-art" viewBox="0 0 120 120"><path pathLength="1" d="M60 8a2.5 2.5 0 1 0 .01 0M58.5 10 34 34M61.5 10 86 34M28 34H92V106H28ZM37 43H83V97H37ZM46 90C50 70 66 80 62 63 60 55 71 52 73 59"/></symbol>
+    <symbol id="i-library" viewBox="0 0 120 120"><path pathLength="1" d="M60 6C68 14 68 26 60 32 52 26 52 14 60 6ZM60 12V32M60 50C48 42 32 42 16 46V96C32 92 48 92 60 100M60 50C72 42 88 42 104 46V96C88 92 72 92 60 100M60 50V100M26 58C36 56 46 57 52 61M26 68C36 66 46 67 52 71M26 78C36 76 46 77 52 81M68 61C74 57 84 56 94 58M68 71C74 67 84 66 94 68M68 81C74 77 84 76 94 78M63 99V114L60 110 57 114V99"/></symbol>
+    <symbol id="i-studio" viewBox="0 0 120 120"><path pathLength="1" d="M98 60A38 38 0 1 1 22 60 38 38 0 1 1 98 60ZM8 60H22M98 60H112M38 56V64M43 52V68M48 46V74M53 40V80M58 34V86M63 42V78M68 48V72M73 52V68M78 55V65M83 57V63"/></symbol>
+    <symbol id="i-film" viewBox="0 0 120 120"><path pathLength="1" d="M38 40A14 14 0 1 1 10 40 14 14 0 1 1 38 40ZM110 40A14 14 0 1 1 82 40 14 14 0 1 1 110 40ZM24 54V96M96 54V96M34 24H86V66H34ZM40 30H80V60H40ZM40 58 52 46 60 52 68 44 80 56M75 38a3 3 0 1 0 .01 0M34 24 18 14M86 24 102 14M34 66 30 96M86 66 90 96M8 96H112"/></symbol>
+    <symbol id="i-music" viewBox="0 0 120 120"><path pathLength="1" d="M12 18C40 36 80 36 108 18M60 50V82M56 42a4 6 0 1 0 8 0 4 6 0 1 0-8 0M54 84 60 80 66 84M28 84H92V94H28ZM20 99H100M28 58A10 10 0 1 1 8 58 10 10 0 1 1 28 58ZM112 58A10 10 0 1 1 92 58 10 10 0 1 1 112 58ZM18 68V99M102 68V99"/><path class="dots" d="M24 25h.01M36 30h.01M48 32.5h.01M60 33.5h.01M72 32.5h.01M84 30h.01M96 25h.01"/></symbol>
+    <symbol id="i-nature" viewBox="0 0 120 120"><path pathLength="1" d="M36 64C20 64 18 44 32 40 30 26 46 18 56 26 62 14 82 16 86 30 100 31 104 48 92 56 96 67 80 72 72 64 64 72 46 72 40 64ZM54 104C56 92 54 80 56 64M66 104C64 92 66 80 64 64M60 82 50 66M61 76 71 62M12 104H108M80 94H102M82 94V104M100 94V104M80 89H102M22 82c4-6 8-5 7 1-1 5-6 4-7-1Z"/></symbol>
+    <symbol id="i-events" viewBox="0 0 120 120"><path pathLength="1" d="M32 102V48A28 28 0 0 1 88 48V102M38 102V50A22 22 0 0 1 82 50V102M60 28V102M55 70h-3M65 70h3M18 102H102M60 102 28 116M60 102 44 116M60 102 76 116M60 102 92 116"/></symbol>
+  </defs>
+</svg>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__mark"><img src="/src/images/symbol.webp" alt="" width="360" height="213"></div>
+    <p class="loader__script">Feel &amp; Belong</p>
+    <p class="loader__count"><span id="loaderCount">0</span></p>
+  </div>
+</div>
+
+<canvas class="scene" id="scene" aria-hidden="true"></canvas>
+<div class="scene-fallback" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<div class="cursor is-hidden" id="cursor" aria-hidden="true"><span class="cursor__ring"><span class="cursor__label" id="cursorLabel"></span></span><span class="cursor__dot"></span></div>
+
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top" aria-label="ORA Space, back to top"><img src="/src/images/horizontal.webp" alt="ORA Space · Art · Café" width="420" height="102"></a>
+  <nav class="nav__links" aria-label="Main">
+    <a href="#house" data-nav="house">The House</a>
+    <a href="#rooms" data-nav="rooms">Rooms</a>
+    <a href="#day" data-nav="day">A Day</a>
+    <a href="#join" data-nav="join">Get Involved</a>
+    <a href="#visit" data-nav="visit">Visit</a>
+    <a class="nav__join" href="#joinForm">Join the Opening List</a>
+  </nav>
+  <button class="nav__toggle" id="menuToggle" aria-expanded="false" aria-controls="menu"><span class="sr">Menu</span><span class="nav__bars" aria-hidden="true"><i></i><i></i></span></button>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <div class="menu__inner">
+    <p class="eyebrow">Walk through ORA</p>
+    <nav aria-label="Mobile">
+      <a href="#house"><span>01</span>The House</a>
+      <a href="#rooms"><span>02</span>Rooms</a>
+      <a href="#day"><span>03</span>A Day at ORA</a>
+      <a href="#join"><span>04</span>Get Involved</a>
+      <a href="#visit"><span>05</span>Visit</a>
+      <a class="menu__join" href="#joinForm"><span>06</span>Join the Opening List</a>
+    </nav>
+    <p class="menu__script">Feel &amp; Belong</p>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+
+  <!-- HERO -->
+  <section class="hero" id="top" aria-labelledby="heroTitle">
+    <div class="hero__inner wrap">
+      <p class="eyebrow hero__eyebrow" data-reveal><span class="pulse" aria-hidden="true"></span>Opening soon</p>
+      <h1 class="hero__title" id="heroTitle">
+        <img class="hero__logo" src="/src/images/secondary.webp" alt="ORA Space" width="640" height="445" data-reveal>
+        <span class="hero__line" data-split>A pause, in a <em>walawwa.</em></span>
+      </h1>
+      <p class="hero__lede" data-reveal>A heritage house among old trees, opening its doors to art, music, film, books, studio work and unhurried coffee.</p>
+      <div class="hero__actions" data-reveal>
+        <a class="btn btn--gold" href="#joinForm" data-magnetic>Join the Opening List</a>
+        <a class="btn btn--ghost" href="#rooms" data-magnetic>Walk through the house <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+      </div>
+    </div>
+    <a class="hero__cue" href="#house" aria-label="Scroll to The House"><span>Scroll to step inside</span><i aria-hidden="true"></i></a>
+  </section>
+
+  <!-- THE HOUSE -->
+  <section class="house" id="house" aria-labelledby="houseTitle">
+    <div class="wrap house__grid">
+      <div class="house__copy">
+        <p class="eyebrow" data-reveal>The House</p>
+        <h2 class="h2" id="houseTitle" data-split>A walawwa, <em>opened again.</em></h2>
+        <p class="manifesto" id="manifesto">ORA is a heritage house among old trees, opened again for the slow things. Coffee that is never rushed. Art on walls that remember. Music on the lawn, films under the branches, and books read slowly. A place to feel, and to belong.</p>
+      </div>
+      <figure class="house__art">
+        <svg id="houseSvg" viewBox="0 0 600 320" role="img" aria-label="Line drawing of the ORA house: a tiled roof over a veranda of five arches, a lantern in the centre arch, old trees on either side">
+          <defs>
+            <radialGradient id="lanternGlow"><stop offset="0" stop-color="#ffd58a" stop-opacity=".9"/><stop offset=".35" stop-color="#e6cf94" stop-opacity=".25"/><stop offset="1" stop-color="#cfa95b" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle class="house__glow" cx="300" cy="196" r="60" fill="url(#lanternGlow)"/>
+          <g class="house__lines" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path pathLength="1" d="M14 286H586"/>
+            <path pathLength="1" d="M104 154 188 92H412L496 154Z"/>
+            <path pathLength="1" d="M146 124H454M126 140H474M188 92 168 154M412 92 432 154"/>
+            <path pathLength="1" d="M118 154H482V164H118Z"/>
+            <path pathLength="1" d="M130 164V270H470V164"/>
+            <path pathLength="1" d="M150 270V214A30 30 0 0 1 210 214V270"/>
+            <path pathLength="1" d="M210 270V214A30 30 0 0 1 270 214V270"/>
+            <path pathLength="1" d="M270 270V214A30 30 0 0 1 330 214V270"/>
+            <path pathLength="1" d="M330 270V214A30 30 0 0 1 390 214V270"/>
+            <path pathLength="1" d="M390 270V214A30 30 0 0 1 450 214V270"/>
+            <path pathLength="1" d="M146 210H154M206 210H214M266 210H274M326 210H334M386 210H394M446 210H454"/>
+            <path pathLength="1" d="M300 184V190M294 190H306L304 206H296ZM297 206 300 210 303 206"/>
+            <path pathLength="1" d="M262 270H338V278H262ZM254 278H346V286H254Z"/>
+            <path pathLength="1" d="M58 286C60 254 54 236 62 206M76 286C74 254 80 236 72 206M66 234 50 214M68 226 84 210"/>
+            <path pathLength="1" d="M34 210C14 208 12 180 32 174 28 150 56 140 70 154 80 132 112 138 112 160 130 164 128 194 110 198 112 214 88 220 80 208 70 220 44 220 34 210Z"/>
+            <path pathLength="1" d="M532 286C534 256 528 240 536 214M548 286C546 256 552 240 544 214M540 240 526 222M542 232 556 218"/>
+            <path pathLength="1" d="M506 216C490 214 488 190 506 184 504 162 530 154 542 168 552 150 580 158 578 178 594 184 590 210 574 212 572 226 550 228 544 216 534 226 512 226 506 216Z"/>
+            <path pathLength="1" d="M494 270H522M496 270V286M520 270V286M494 264H522"/>
+            <path pathLength="1" d="M190 286c2-6 4-6 6 0M226 286c2-5 4-5 6 0M372 286c2-6 4-6 6 0M410 286c2-5 4-5 6 0"/>
+          </g>
+        </svg>
+        <figcaption>The house, drawn as we found it.</figcaption>
+      </figure>
+    </div>
+
+    <div class="wrap pillars">
+      <article class="pillar" data-reveal>
+        <p class="lockup"><span class="lockup__ora">ORA</span><span class="lockup__bar" aria-hidden="true"></span><span class="lockup__sub">Space</span></p>
+        <p>Rooms, verandas and wide lawns in a heritage house, open for gatherings, shoots and slow afternoons.</p>
+      </article>
+      <article class="pillar" data-reveal>
+        <p class="lockup"><span class="lockup__ora">ORA</span><span class="lockup__bar" aria-hidden="true"></span><span class="lockup__sub">Art</span></p>
+        <p>Old walls for new work, a lawn for music and theatre, and a screen under the trees for film evenings.</p>
+      </article>
+      <article class="pillar" data-reveal>
+        <p class="lockup"><span class="lockup__ora">ORA</span><span class="lockup__bar" aria-hidden="true"></span><span class="lockup__sub">Café</span></p>
+        <p>Coffee, unhurried. Served inside the walawwa or out in the shade, for as long as you want to stay.</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="band" aria-hidden="true">
+    <div class="band__track" id="bandTrack">
+      <span>Space</span><b>✦</b><span>Art</span><b>✦</b><span>Café</span><b>✦</b><span>Studio</span><b>✦</b><span>Cinema</span><b>✦</b><span>Library</span><b>✦</b>
+      <span>Space</span><b>✦</b><span>Art</span><b>✦</b><span>Café</span><b>✦</b><span>Studio</span><b>✦</b><span>Cinema</span><b>✦</b><span>Library</span><b>✦</b>
+    </div>
+  </div>
+
+  <!-- ROOMS: the walk through the arches -->
+  <section class="rooms" id="rooms" aria-labelledby="roomsTitle">
+    <div class="rooms__stage">
+      <div class="rooms__head wrap">
+        <p class="eyebrow">The rooms of ORA</p>
+        <h2 class="rooms__title" id="roomsTitle">Walk through <em>the house.</em></h2>
+      </div>
+
+      <ol class="rooms__index" id="roomsIndex" aria-label="Rooms">
+        <li><button type="button" data-go="0"><span>01</span>Café</button></li>
+        <li><button type="button" data-go="1"><span>02</span>Art</button></li>
+        <li><button type="button" data-go="2"><span>03</span>Library</button></li>
+        <li><button type="button" data-go="3"><span>04</span>Studio</button></li>
+        <li><button type="button" data-go="4"><span>05</span>Film</button></li>
+        <li><button type="button" data-go="5"><span>06</span>Music &amp; Stage</button></li>
+        <li><button type="button" data-go="6"><span>07</span>Nature</button></li>
+        <li><button type="button" data-go="7"><span>08</span>Private Events</button></li>
+      </ol>
+
+      <div class="rooms__panels wrap" id="roomPanels" aria-live="polite">
+        <article class="room is-active" data-room="0">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-cafe"/></svg>
+          <h3 class="room__tag">Café</h3>
+          <p class="room__title">Coffee, <em>unhurried.</em></p>
+          <p class="room__text">A café among old trees, made for long conversations and quiet mornings alone. Sit inside the walawwa or out in the shade, and stay as long as you like.</p>
+          <a class="room__cta" href="#joinForm" data-interest="cafe">Be among our first guests<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="1">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-art"/></svg>
+          <h3 class="room__tag">Art</h3>
+          <p class="room__title">Your work, <em>on an old wall.</em></p>
+          <p class="room__text">We are opening the walls of the house to new work. Our first exhibiting artists will hang paintings, prints and photographs where people slow down enough to really look.</p>
+          <a class="room__cta" href="#joinForm" data-interest="art">Message us to exhibit<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="2">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-library"/></svg>
+          <h3 class="room__tag">Library</h3>
+          <p class="room__title">Read <em>slowly.</em></p>
+          <p class="room__text">A quiet library in a house that remembers. Take a book from the shelves, find a window seat, and let the morning go by.</p>
+          <a class="room__cta" href="#joinForm" data-interest="library">Save ORA for a reading morning<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="3">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-studio"/></svg>
+          <h3 class="room__tag">Studio</h3>
+          <p class="room__title">Make something <em>here.</em></p>
+          <p class="room__text">A studio for sound, image and ideas. Record, shoot, rehearse or simply think, with the calm of the walawwa around you.</p>
+          <a class="room__cta" href="#joinForm" data-interest="studio">Enquire for founding studio rates<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="4">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-film"/></svg>
+          <h3 class="room__tag">Film</h3>
+          <p class="room__title">A screen <em>under the trees.</em></p>
+          <p class="room__text">Film evenings, shared slowly. The screen goes up in the garden, the lanterns come on, and the lawn becomes a cinema.</p>
+          <a class="room__cta" href="#joinForm" data-interest="film">Join the screening list<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="5">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-music"/></svg>
+          <h3 class="room__tag">Music &amp; Stage</h3>
+          <p class="room__title">The lawn <em>is the stage.</em></p>
+          <p class="room__text">Acoustic sets, poetry and theatre under the trees. Small audiences, open air, and room for new voices.</p>
+          <a class="room__cta" href="#joinForm" data-interest="music">Perform with us<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="6">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-nature"/></svg>
+          <h3 class="room__tag">Nature</h3>
+          <p class="room__title">Under <em>old trees.</em></p>
+          <p class="room__text">Slow mornings, wide lawns and cool shade. Step outside, breathe, and remember what an unhurried afternoon feels like.</p>
+          <a class="room__cta" href="#joinForm" data-interest="nature">Come and breathe<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="room" data-room="7">
+          <svg class="room__icon icon" aria-hidden="true" focusable="false"><use href="#i-events"/></svg>
+          <h3 class="room__tag">Private Events</h3>
+          <p class="room__title">Hold your <em>moment here.</em></p>
+          <p class="room__text">Shoots, gatherings and private evenings in a heritage house. Tell us what you are planning and we will shape the space around it.</p>
+          <a class="room__cta" href="#joinForm" data-interest="events">Enquire for private events<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+      </div>
+
+      <div class="rooms__meter" aria-hidden="true">
+        <span class="rooms__hint">Keep scrolling to walk on</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- A DAY AT ORA -->
+  <section class="day" id="day" aria-labelledby="dayTitle">
+    <div class="wrap day__grid">
+      <div class="day__copy glass">
+        <p class="eyebrow">A day at ORA</p>
+        <h2 class="h2" id="dayTitle" data-split>From first light <em>to lanterns.</em></h2>
+        <p class="day__lede">Turn the sun around the clock to see how a day in the house unfolds, hour by hour. The garden behind this page changes with you.</p>
+        <ol class="day__moments" id="dayMoments">
+          <li><button type="button" data-hour="8"><time datetime="08:00">8 am</time>First light</button></li>
+          <li><button type="button" data-hour="10"><time datetime="10:00">10 am</time>Reading morning</button></li>
+          <li><button type="button" data-hour="12"><time datetime="12:00">Noon</time>Making hours</button></li>
+          <li><button type="button" data-hour="17"><time datetime="17:00">5 pm</time>Golden hour</button></li>
+          <li><button type="button" data-hour="19"><time datetime="19:00">7 pm</time>Lanterns on</button></li>
+          <li><button type="button" data-hour="21"><time datetime="21:00">9 pm</time>Private evenings</button></li>
+        </ol>
+        <p class="day__note"><span id="dayHours">Open 8.00 am to 10.00 pm.</span> An imagined day; programmes will be announced as we open.</p>
+      </div>
+
+      <!-- The sun clock: a 24-hour dial with noon at the top. The sun rises on the left at 6 am,
+           stands straight up at noon and sets on the right at 6 pm; the lower half is night. -->
+      <div class="dial" id="dial">
+        <div class="dial__clock" id="dialClock">
+          <svg class="dial__svg" viewBox="0 0 400 400" aria-hidden="true">
+            <defs>
+              <radialGradient id="dialFace" cx="50%" cy="42%" r="58%">
+                <stop offset="0" stop-color="#11301f" stop-opacity=".82"/>
+                <stop offset="1" stop-color="#050f0a" stop-opacity=".94"/>
+              </radialGradient>
+              <linearGradient id="dialDay" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e6cf94" stop-opacity=".2"/>
+                <stop offset="1" stop-color="#e6cf94" stop-opacity=".02"/>
+              </linearGradient>
+            </defs>
+            <circle class="dial__face" cx="200" cy="200" r="198"/>
+            <path class="dial__below" d="M66 200A134 134 0 0 0 334 200Z"/>
+            <path class="dial__day" d="M66 200A134 134 0 0 1 334 200Z"/>
+            <g class="dial__night">
+              <circle cx="128" cy="150" r="1.3"/><circle cx="156" cy="106" r="1"/><circle cx="194" cy="84" r="1.4"/>
+              <circle cx="104" cy="182" r="1"/><circle cx="314" cy="152" r="1.2"/><circle cx="322" cy="182" r="1"/>
+              <circle cx="226" cy="96" r="1"/><circle cx="122" cy="172" r=".9"/>
+              <path class="dial__moon" d="M279 115.1A13 13 0 1 1 264.9 101A10.1 10.1 0 0 0 279 115.1Z"/>
+            </g>
+            <path class="dial__horizon" d="M54 200H346"/>
+            <circle class="dial__track" cx="200" cy="200" r="138"/>
+            <path class="dial__closed" id="dialClosed"/>
+            <path class="dial__open" id="dialOpen"/>
+            <g class="dial__ticks" id="dialTicks"></g>
+            <g class="dial__labels" id="dialLabels"></g>
+            <g class="dial__marks" id="dialMarks"></g>
+          </svg>
+          <div class="dial__hand" id="dialHand">
+            <span class="dial__arm"></span>
+            <div class="dial__knob" id="dialKnob" role="slider" tabindex="0" aria-label="Time of day" aria-valuemin="0" aria-valuemax="23" aria-valuenow="19" aria-valuetext="7.00 pm, open. Lanterns on"><span class="dial__sun"></span></div>
+          </div>
+          <div class="dial__read">
+            <p class="dial__time" id="dialTime">7.00</p>
+            <p class="dial__mer" id="dialMer">pm</p>
+            <p class="dial__status" id="dialStatus">Open</p>
+          </div>
+        </div>
+        <div class="dial__card" id="dialCard" aria-live="polite">
+          <p class="dial__name" id="dialName">Lanterns on</p>
+          <p class="dial__text" id="dialText">A screen goes up under the trees. Film evenings, shared slowly.</p>
+          <p class="dial__tags" id="dialTags"><span>Film</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET INVOLVED -->
+  <section class="join" id="join" aria-labelledby="joinTitle">
+    <div class="wrap">
+      <div class="join__head">
+        <p class="eyebrow" data-reveal>Get involved</p>
+        <h2 class="h2" id="joinTitle" data-split>Come as <em>you are.</em></h2>
+        <p class="join__lede" data-reveal>ORA's first season is being shaped now. Tell us how you would like to be part of it, and we will hold a place for you.</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="#joinForm" data-interest="cafe" data-reveal data-cursor="Join">
+          <svg class="card__icon icon" aria-hidden="true" focusable="false"><use href="#i-cafe"/></svg>
+          <h3>As a guest</h3>
+          <p>Coffee, a book, a bench in the shade. Come for an hour or stay the whole day.</p>
+          <span class="card__cta">Be among our first guests</span>
+        </a>
+        <a class="card" href="#joinForm" data-interest="art" data-reveal data-cursor="Join">
+          <svg class="card__icon icon" aria-hidden="true" focusable="false"><use href="#i-art"/></svg>
+          <h3>As an artist</h3>
+          <p>Show your work on an old wall. We are choosing our first exhibitions now.</p>
+          <span class="card__cta">Message us to exhibit</span>
+        </a>
+        <a class="card" href="#joinForm" data-interest="music" data-reveal data-cursor="Join">
+          <svg class="card__icon icon" aria-hidden="true" focusable="false"><use href="#i-music"/></svg>
+          <h3>As a performer</h3>
+          <p>Acoustic sets, poetry and theatre. The lawn is yours for an evening.</p>
+          <span class="card__cta">Perform with us</span>
+        </a>
+        <a class="card" href="#joinForm" data-interest="studio" data-reveal data-cursor="Join">
+          <svg class="card__icon icon" aria-hidden="true" focusable="false"><use href="#i-studio"/></svg>
+          <h3>As a maker</h3>
+          <p>Sound, image and ideas. Founding rates for our first studio members.</p>
+          <span class="card__cta">Enquire for founding rates</span>
+        </a>
+        <a class="card" href="#joinForm" data-interest="film" data-reveal data-cursor="Join">
+          <svg class="card__icon icon" aria-hidden="true" focusable="false"><use href="#i-film"/></svg>
+          <h3>As a film lover</h3>
+          <p>Evenings under the trees, a screen in the garden, films shared slowly.</p>
+          <span class="card__cta">Join the screening list</span>
+        </a>
+        <a class="card" href="#joinForm" data-interest="events" data-reveal data-cursor="Join">
+          <svg class="card__icon icon" aria-hidden="true" focusable="false"><use href="#i-events"/></svg>
+          <h3>As a host</h3>
+          <p>Shoots, gatherings and private evenings, held in a heritage house.</p>
+          <span class="card__cta">Enquire for private events</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="visit" id="visit" aria-labelledby="visitTitle">
+    <div class="wrap visit__grid">
+      <div class="visit__info">
+        <p class="eyebrow" data-reveal>Visit</p>
+        <h2 class="h2" id="visitTitle" data-split>Come and <em>breathe.</em></h2>
+        <p class="visit__lede" data-reveal>ORA opens soon. Join the Opening List and we will send you the date, the address and the first programme before anyone else.</p>
+        <dl class="facts" id="facts" data-reveal>
+          <div><dt>Opening</dt><dd id="factOpening">Soon. The date goes to the Opening List first.</dd></div>
+          <div><dt>Where</dt><dd id="factWhere">A heritage house among old trees. The address is shared at launch.</dd></div>
+          <div><dt>Hours</dt><dd id="factHours">Announced with the opening.</dd></div>
+          <div><dt>Contact</dt><dd id="factContact">Contact details are coming soon.</dd></div>
+        </dl>
+      </div>
+
+      <form class="form glass" id="joinForm" novalidate>
+        <div class="form__body" id="formBody">
+          <h3 class="form__title">Join the Opening List</h3>
+          <div class="field">
+            <label for="fName">Your name</label>
+            <input id="fName" name="name" type="text" autocomplete="name" required placeholder="Your name">
+            <p class="field__err" id="fNameErr" hidden>Please add your name.</p>
+          </div>
+          <div class="field">
+            <label for="fEmail">Email</label>
+            <input id="fEmail" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
+            <p class="field__err" id="fEmailErr" hidden>Please enter an email address like name@example.com.</p>
+          </div>
+          <fieldset class="field chips">
+            <legend>I'm interested in</legend>
+            <label><input type="checkbox" name="interest" value="cafe" id="iCafe"><span>Café</span></label>
+            <label><input type="checkbox" name="interest" value="art" id="iArt"><span>Art</span></label>
+            <label><input type="checkbox" name="interest" value="library" id="iLibrary"><span>Library</span></label>
+            <label><input type="checkbox" name="interest" value="studio" id="iStudio"><span>Studio</span></label>
+            <label><input type="checkbox" name="interest" value="film" id="iFilm"><span>Film</span></label>
+            <label><input type="checkbox" name="interest" value="music" id="iMusic"><span>Music &amp; Stage</span></label>
+            <label><input type="checkbox" name="interest" value="nature" id="iNature"><span>Nature</span></label>
+            <label><input type="checkbox" name="interest" value="events" id="iEvents"><span>Private Events</span></label>
+          </fieldset>
+          <div class="field">
+            <label for="fNote">Anything you would like to tell us? <small>(optional)</small></label>
+            <textarea id="fNote" name="note" rows="3" placeholder="Your work, an event you're planning, a question"></textarea>
+          </div>
+          <!-- spam trap: people never see or fill this; Formspree discards sign-ups that arrive with it filled in -->
+          <div class="form__trap" aria-hidden="true">
+            <label for="fGotcha">Leave this field empty</label>
+            <input id="fGotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <button class="btn btn--gold btn--block" type="submit" id="fSubmit" data-magnetic>Join the Opening List</button>
+          <p class="form__status" id="formStatus" role="status"></p>
+        </div>
+        <div class="form__done" id="formDone" hidden tabindex="-1">
+          <svg class="form__lantern" viewBox="0 0 120 120" aria-hidden="true"><path pathLength="1" d="M60 10V30M52 30H68L74 40H46ZM48 40H72L70 74H50ZM50 74 60 84 70 74M60 84V92"/><circle cx="60" cy="57" r="9"/></svg>
+          <h3 class="form__title" id="doneTitle">Thank you.</h3>
+          <p id="doneText">A lantern is on for you. We will write when the doors open.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__top">
+    <p class="foot__script" data-reveal>Feel &amp; Belong</p>
+    <img class="foot__logo" src="/src/images/primary.webp" alt="ORA Space · Art · Café. Feel & Belong" width="620" height="637" loading="lazy" data-reveal>
+  </div>
+  <div class="wrap foot__cols">
+    <nav aria-label="Footer">
+      <p class="foot__h">Explore</p>
+      <a href="#house">The House</a><a href="#rooms">Rooms</a><a href="#day">A Day at ORA</a><a href="#join">Get Involved</a><a href="#visit">Visit</a>
+    </nav>
+    <div>
+      <p class="foot__h">The family</p>
+      <p class="foot__list"><span>ORA Space</span> · <span>ORA Art</span> · <span>ORA Café</span> · <span>ORA Studio</span> · <span>ORA Cinema</span> · <span>ORA Library</span></p>
+    </div>
+    <div>
+      <p class="foot__h">Stay close</p>
+      <div id="footContact"><p>Follow along for the opening. Our channels go live soon.</p></div>
+    </div>
+  </div>
+  <div class="wrap foot__base">
+    <p>© <span id="year">2026</span> ORA Space</p>
+    <p class="foot__desc">Space · Art · Café</p>
+    <button class="foot__top-btn" type="button" id="toTop">Back to the arch <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+  </div>
+</footer>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

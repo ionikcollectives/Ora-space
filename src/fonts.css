@@ -1,0 +1,10 @@
+/* Brand typefaces (Latin subsets), bundled locally so the site never depends on a font CDN.
+   Cinzel: labels · Cormorant Garamond: text · Pinyon Script: the "Feel & Belong" tagline */
+@import '@fontsource/cinzel/latin-400.css';
+@import '@fontsource/cinzel/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-300.css';
+@import '@fontsource/cormorant-garamond/latin-300-italic.css';
+@import '@fontsource/cormorant-garamond/latin-400.css';
+@import '@fontsource/cormorant-garamond/latin-400-italic.css';
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/pinyon-script/latin-400.css';
