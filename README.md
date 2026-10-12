@@ -10,7 +10,7 @@ Built with plain HTML, CSS and JavaScript, [Three.js](https://threejs.org) for t
 
 ## 1. Get started
 
-You need **Node.js 20.19+ or 22.12+** (download the LTS version from [nodejs.org](https://nodejs.org)).
+You need **Node.js 24** (or at least 22.12) (download the LTS version from [nodejs.org](https://nodejs.org)).
 
 1. Open this folder in VS Code (**File → Open Folder…** and choose `ora-space-site`).
 2. Open the terminal (**Terminal → New Terminal**) and run:
@@ -41,9 +41,10 @@ ora-space-site/
 ├── public/             ← copied as-is into the hosted build: link-preview image, home-screen icons,
 │                         web manifest, 404 page, hosting headers
 ├── vite.config.js      ← build settings (normal and single-file) and the launch extras
-├── wrangler.jsonc      ← Cloudflare deploy settings: serve the built dist/ folder as a static site
+├── vercel.json         ← Vercel settings: build command, output folder, caching and security headers
+├── wrangler.jsonc      ← Cloudflare settings (only used if the site is moved to Cloudflare)
 ├── package.json
-├── .nvmrc              ← the Node version hosting services should build with
+├── .nvmrc              ← the Node version for local work and for hosts that read it (24)
 └── .vscode/            ← one-click tasks and Chrome launch
 ```
 
@@ -84,8 +85,9 @@ The "Join the Opening List" form is connected to the Formspree form `https://for
 1. Set `siteUrl` to the live address. The build then writes full-address link previews, a canonical link, `sitemap.xml` and a sitemap line in `robots.txt`.
 2. Send yourself a test sign-up on the live site and check it reaches Formspree.
 3. Fill in the opening date, address, map link and contact details (or leave any of them empty for the "coming soon" wording).
-4. Run `npm run build` and upload the `dist` folder (see section 5).
-5. Paste the live address into WhatsApp or Facebook to check the link preview, and optionally submit `sitemap.xml` in Google Search Console.
+4. Commit and push to GitHub (`main`). Vercel rebuilds and publishes the site in about a minute (see section 5).
+5. Paste the live address into WhatsApp or Facebook to check the link preview.
+6. Verify the site in Google Search Console and Bing Webmaster Tools (paste their "HTML tag" codes into `googleSiteVerification` and `bingSiteVerification`, then push), and submit `sitemap.xml`.
 
 ---
 
@@ -118,16 +120,15 @@ npm run build:single   # → dist-single/   one self-contained index.html (~1.3 
 npm run preview        # serves dist/ locally to check the build
 ```
 
-**Hosting the `dist/` folder** (all have free plans):
+**The live site is hosted on Vercel**, connected to the GitHub repository: every push to `main` rebuilds and publishes it. `vercel.json` holds the settings (preset Vite, build command `npm run build`, output folder `dist`), caches the bundled files for a year and adds a few security headers. Vercel uses Node 24, from `engines` in `package.json`. The custom domain is managed in the Vercel project under **Settings → Domains**.
 
+**Other hosts** (if the site ever moves):
+
+- **Cloudflare (connected to GitHub)**: build command `npm run build`, deploy command `npx wrangler deploy`; `wrangler.jsonc` tells Cloudflare to serve `dist` as a static site.
 - **Netlify Drop**: drag the `dist` folder onto [app.netlify.com/drop](https://app.netlify.com/drop).
-- **Cloudflare (connected to GitHub)**: build command `npm run build`, deploy command `npx wrangler deploy`. `wrangler.jsonc` tells Cloudflare to serve `dist` as a static site, so every push to `main` rebuilds the site.
-- **Vercel** or **Cloudflare Pages**: connect the project, build command `npm run build`, output folder `dist`.
 - **Any web host or cPanel**: upload the contents of `dist/` to `public_html`.
 
-Then connect your own domain in the host's settings. Hosts that build for you read the Node version from `.nvmrc`.
-
-Besides the page itself, `dist/` contains the link-preview image, home-screen icons and `site.webmanifest`, a branded `404.html` that Netlify, Cloudflare Pages and GitHub Pages show for missing addresses, `robots.txt` (plus `sitemap.xml` once `siteUrl` is set), and `_headers`, which Netlify and Cloudflare Pages use to cache the bundled files for a year.
+Besides the page itself, `dist/` contains the link-preview image, home-screen icons and `site.webmanifest`, a branded `404.html` that Vercel, Netlify, Cloudflare and GitHub Pages show for missing addresses, `robots.txt` (plus `sitemap.xml` once `siteUrl` is set), and `_headers`, the caching settings Netlify and Cloudflare read (Vercel uses `vercel.json` instead).
 
 **Single-file build:** `dist-single/index.html` contains everything (code, fonts, logos) and opens with a double-click, so it's handy for sending to someone or as a preview. It leaves out the link-preview tags and home-screen icons, so host the `dist` build for the public site.
 

@@ -80,6 +80,12 @@ function launchExtras() {
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
         { tag: 'link', attrs: { rel: 'manifest', href: './site.webmanifest' } }
       ];
+      // site-ownership codes from Google Search Console and Bing Webmaster Tools ("HTML tag" method)
+      const verify = { 'google-site-verification': site.googleSiteVerification, 'msvalidate.01': site.bingSiteVerification };
+      for (const [name, code] of Object.entries(verify)) {
+        const value = String(code || '').trim().replace(/^.*content="([^"]+)".*$/, '$1');
+        if (value) tags.push({ tag: 'meta', attrs: { name, content: value } });
+      }
       if (SITE_URL) {
         tags.unshift(
           { tag: 'link', attrs: { rel: 'canonical', href: `${SITE_URL}/` } },

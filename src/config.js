@@ -16,5 +16,7 @@ export default {
   email: '',         // e.g. 'hello@yourdomain.com'
   phone: '',         // e.g. '+94 77 123 4567' (also used for the WhatsApp link)
   instagram: '',     // handle without the @
+  googleSiteVerification: '',  // optional: the code from Google Search Console's "HTML tag" option (just the content="…" part)
+  bingSiteVerification: '',    // optional: the same for Bing Webmaster Tools (the msvalidate.01 code)
   formEndpoint: 'https://formspree.io/f/xaeqbkbw'   // Formspree form for the Opening List. Sign-ups are POSTed here as JSON.
 };
