@@ -1,6 +1,7 @@
 import './fonts.css';
 import './style.css';
 import CONFIG from './config.js';
+import { details, DAYS, dayRange, wrapHour, h12, meridiem, fmtLong, fmtShort } from './details.js';
 import { createScene, ARCH_SPACING, ARCH_HALF_WIDTH } from './scene.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -14,30 +15,16 @@ const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matc
 const root = document.documentElement;
 
 /* ---------------- Opening hours ---------------- */
-const wrapHour = h => ((h % 24) + 24) % 24;
-const hourSetting = (v, fallback) => (v === '' || v == null || isNaN(+v)) ? fallback : wrapHour(Math.round(+v));
-const OPENS = hourSetting(CONFIG.opensAt, 8), CLOSES = hourSetting(CONFIG.closesAt, 22);
-const isOpen = h => OPENS === CLOSES || wrapHour(h - OPENS) < wrapHour(CLOSES - OPENS);
-const h12 = h => (h % 12) || 12;
-const meridiem = h => h === 0 ? 'midnight' : h === 12 ? 'noon' : h < 12 ? 'am' : 'pm';
-const fmtLong = h => `${h12(h)}.00 ${meridiem(h)}`; // 8.00 am, 12.00 noon, 10.00 pm
-const fmtShort = h => h === 0 ? 'Midnight' : h === 12 ? 'Noon' : `${h12(h)} ${h < 12 ? 'am' : 'pm'}`; // 8 am
-// Open days: a run of days reads "Monday to Friday", others are listed ("Monday, Wednesday and Friday").
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const OPEN_DAYS = Array.isArray(CONFIG.openDays) && CONFIG.openDays.length
-  ? DAYS.filter(d => CONFIG.openDays.some(x => String(x).trim().slice(0, 3).toLowerCase() === d.slice(0, 3).toLowerCase()))
-  : DAYS;
-const CLOSED_DAYS = DAYS.filter(d => !OPEN_DAYS.includes(d));
-const dayRange = (days, short) => {
-  const name = d => (short ? d.slice(0, 3) : d);
-  const i = days.map(d => DAYS.indexOf(d));
-  if (days.length > 2 && i.every((n, k) => !k || n === i[k - 1] + 1)) return short ? `${name(days[0])}–${name(days[days.length - 1])}` : `${days[0]} to ${days[days.length - 1]}`;
-  return days.length > 1 ? `${days.slice(0, -1).map(name).join(', ')} and ${name(days[days.length - 1])}` : name(days[0]);
-};
-const openDaysText = CLOSED_DAYS.length ? dayRange(OPEN_DAYS) : 'every day';
-const closedDaysText = CLOSED_DAYS.length ? `closed on ${dayRange(CLOSED_DAYS)}` : '';
-const timesText = OPENS === CLOSES ? 'around the clock' : `${fmtLong(OPENS)} to ${fmtLong(CLOSES)}`;
-const hoursLine = `Open ${CLOSED_DAYS.length ? openDaysText + ', ' : 'every day, '}${timesText}.`;
+// details.js works the hours and contacts out from config.js, for this script and for the text built into the page
+const D = details(CONFIG);
+const OPENS = D.opens, CLOSES = D.closes;
+const isOpen = h => D.allDay || wrapHour(h - OPENS) < wrapHour(CLOSES - OPENS);
+function el(tag, props = {}, text) {
+  const n = document.createElement(tag);
+  Object.entries(props).forEach(([k, v]) => n.setAttribute(k, v));
+  if (text != null) n.textContent = text;
+  return n;
+}
 
 /* ---------------- Text splitting ---------------- */
 function splitWords(el) {
@@ -146,12 +133,12 @@ function finishLoader() {
 /* ---------------- Layout metrics ---------------- */
 // Positions are measured once per layout change, so scrolling itself never forces the browser to re-layout.
 const nav = $('#nav');
-const house = $('#house'), rooms = $('#rooms'), day = $('#day'), join = $('#join'), visit = $('#visit');
+const house = $('#house'), rooms = $('#rooms'), day = $('#day'), join = $('#join'), list = $('#list'), visit = $('#visit');
 const houseSvgPaths = $$('#houseSvg .house__lines path');
 const houseSvg = $('#houseSvg');
 const band = $('.band');
 const bandTrack = $('#bandTrack');
-const sectionsForNav = [['house', house], ['rooms', rooms], ['day', day], ['join', join], ['visit', visit]];
+const sectionsForNav = [['house', house], ['rooms', rooms], ['day', day], ['join', join], ['list', list], ['visit', visit]];
 let M = {};
 function measure() {
   const y = window.scrollY;
@@ -329,7 +316,6 @@ const momentBtns = MOMENTS.map(m => {
   momentList.appendChild(li);
   return b;
 });
-$('#dayHours').textContent = hoursLine;
 
 let hour = 19, handDeg = null, lastMoment;
 function setHour(h) {
@@ -359,7 +345,7 @@ function setHour(h) {
     dialName.textContent = open ? m.name : 'We’re closed';
     dialText.textContent = open ? m.text : `The house is resting. The doors open again at ${fmtLong(OPENS)}.`;
     dialTags.textContent = '';
-    (open ? m.space.split(' · ') : [CLOSED_DAYS.length ? `Open ${dayRange(OPEN_DAYS, true)}` : 'Open daily', `${fmtShort(OPENS)} to ${fmtShort(CLOSES)}`]).forEach(t => dialTags.appendChild(el('span', {}, t)));
+    (open ? m.space.split(' · ') : [D.closedDays.length ? `Open ${dayRange(D.openDays, true)}` : 'Open daily', `${fmtShort(OPENS)} to ${fmtShort(CLOSES)}`]).forEach(t => dialTags.appendChild(el('span', {}, t)));
     dialCard.classList.remove('swap'); void dialCard.offsetWidth; dialCard.classList.add('swap');
     MOMENTS.forEach((x, i) => {
       momentBtns[i].setAttribute('aria-pressed', String(x === m));
@@ -517,75 +503,111 @@ $$('[data-interest]').forEach(a => a.addEventListener('click', () => {
   flashWhenSeen.observe(box.parentElement);
 }));
 
-/* ---------------- Settings (ORA_CONFIG) ---------------- */
-const CFG = Object.assign({}, CONFIG);
-function el(tag, props = {}, text) {
-  const n = document.createElement(tag);
-  Object.entries(props).forEach(([k, v]) => n.setAttribute(k, v));
-  if (text != null) n.textContent = text;
-  return n;
+/* ---------------- Visit: today's hours, copying, the map ---------------- */
+const CFG = CONFIG;
+
+// Today (in Sri Lanka) is picked out in the week. Once ORA has opened (nowOpen in config.js), the badge
+// also says whether it is open right now and when that changes.
+const weekDays = $$('#week .week__day');
+const hoursStatus = $('#hoursStatus');
+function colomboNow() {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Colombo', weekday: 'long', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' })
+    .formatToParts(new Date()).map(p => [p.type, p.value]));
+  return { day: parts.weekday, hour: (+parts.hour % 24) + (+parts.minute) / 60 };
 }
-function copyButton(value) {
-  const b = el('button', { type: 'button', class: 'copy' }, 'Copy');
-  b.addEventListener('click', () => {
-    const done = () => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1600); };
-    const fallback = () => {
-      const span = b.previousElementSibling;
-      if (!span) return;
-      const range = document.createRange(); range.selectNodeContents(span);
-      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-      b.textContent = 'Selected';
-      setTimeout(() => { b.textContent = 'Copy'; }, 1600);
-    };
-    try { navigator.clipboard.writeText(value).then(done, fallback); } catch (e) { fallback(); }
+function updateHours() {
+  const now = colomboNow();
+  weekDays.forEach(li => {
+    const today = li.dataset.day === now.day;
+    li.classList.toggle('is-today', today);
+    if (today) li.setAttribute('aria-current', 'date'); else li.removeAttribute('aria-current');
   });
-  return b;
-}
-const handle = (CFG.instagram || '').replace(/^@/, '').trim();
-const digits = (CFG.phone || '').replace(/[^\d+]/g, '');
-const waDigits = digits.replace(/^\+/, '');
-const facebook = (CFG.facebook || '').trim().replace(/#$/, '');
-const link = (href, text, external = true) => el('a', external ? { href, target: '_blank', rel: 'noopener' } : { href }, text);
-if (CFG.openingDate) $('#factOpening').textContent = CFG.openingDate;
-$('#factHours').textContent = CFG.hours || (CLOSED_DAYS.length
-  ? `${openDaysText}, ${timesText}. Closed on ${dayRange(CLOSED_DAYS)}.`
-  : `Every day, ${timesText}.`);
-// the "Good to know" answers follow the same settings as the clock and the Visit details
-const place = [CFG.city, 'Sri Lanka'].filter(Boolean).join(', ');
-$('#faqHours').textContent = `Once open, the house is open ${CLOSED_DAYS.length ? openDaysText + ', ' : 'every day, '}${timesText}${closedDaysText ? ', and ' + closedDaysText : ''}.`;
-const faqWhere = $('#faqWhere');
-if (CFG.address) {
-  faqWhere.textContent = `ORA Space is at ${CFG.address}, Sri Lanka${CFG.city ? ', near Colombo' : ''}: a heritage walawwa among old trees. `;
-  if (CFG.mapsUrl) faqWhere.appendChild(link(CFG.mapsUrl, 'Open it in Google Maps'));
-} else {
-  faqWhere.textContent = `In a heritage walawwa among old trees in ${place}. The full address goes to the Opening List first and is shared here at launch.`;
-}
-if (CFG.address) {
-  const dd = $('#factWhere'); dd.textContent = '';
-  dd.appendChild(el('span', {}, CFG.address));
-  if (CFG.mapsUrl) { dd.appendChild(document.createElement('br')); dd.appendChild(link(CFG.mapsUrl, 'Open in Maps')); }
-}
-if (CFG.email || digits || handle || facebook) {
-  const dd = $('#factContact'); dd.textContent = '';
-  const foot = $('#footContact'); foot.textContent = '';
-  if (CFG.address) foot.appendChild(el('p', { class: 'foot__address' }, CFG.address));
-  if (CFG.email) {
-    const row = el('div', { class: 'row' }); row.append(link('mailto:' + CFG.email, CFG.email, false), copyButton(CFG.email)); dd.appendChild(row);
-    foot.appendChild(link('mailto:' + CFG.email, CFG.email, false));
+  if (!CFG.nowOpen || !hoursStatus) return;
+  const open = D.isOpenAt(now.day, now.hour);
+  let label;
+  if (open) label = D.allDay ? 'Open now' : `Open now · until ${fmtShort(D.closes)}`;
+  else {
+    const i = DAYS.indexOf(now.day);
+    const laterToday = D.openDays.includes(now.day) && now.hour < D.opens;
+    let ahead = laterToday ? 0 : 1;
+    while (!laterToday && ahead < 7 && !D.openDays.includes(DAYS[(i + ahead) % 7])) ahead++;
+    label = `Closed · opens ${laterToday ? 'today' : ahead === 1 ? 'tomorrow' : DAYS[(i + ahead) % 7]} ${fmtShort(D.opens)}`;
   }
-  if (digits) {
-    const row = el('div', { class: 'row' });
-    row.append(link('tel:' + digits, CFG.phone, false), copyButton(CFG.phone), link('https://wa.me/' + waDigits, 'WhatsApp'));
-    dd.appendChild(row);
-    foot.append(link('tel:' + digits, 'Call ' + CFG.phone, false), link('https://wa.me/' + waDigits, 'WhatsApp'));
-  }
-  if (handle || facebook) {
-    const row = el('div', { class: 'row' });
-    if (handle) { row.appendChild(link('https://www.instagram.com/' + encodeURIComponent(handle) + '/', 'Instagram @' + handle)); foot.appendChild(link('https://www.instagram.com/' + encodeURIComponent(handle) + '/', 'Instagram @' + handle)); }
-    if (facebook) { row.appendChild(link(facebook, 'Facebook')); foot.appendChild(link(facebook, 'Facebook')); }
-    dd.appendChild(row);
+  hoursStatus.textContent = label;
+  hoursStatus.hidden = false;
+  hoursStatus.classList.toggle('is-closed', !open);
+}
+updateHours();
+setInterval(updateHours, 60000);
+
+// Copy buttons: the value goes to the clipboard, the icon turns to a tick and a short note confirms it.
+const toast = $('#toast'), toastText = $('#toastText');
+let toastTimer = 0;
+function showToast(message) {
+  toastText.textContent = message;
+  toast.classList.add('is-on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('is-on');
+    toastTimer = setTimeout(() => { toastText.textContent = ''; }, 600);
+  }, 2400);
+}
+async function copyText(value) {
+  try { await navigator.clipboard.writeText(value); return true; } catch (err) { /* older browsers, or no permission */ }
+  const area = el('textarea', { readonly: '', style: 'position:fixed;top:0;left:0;opacity:0' });
+  area.value = value;
+  document.body.appendChild(area);
+  area.select();
+  let copied = false;
+  try { copied = document.execCommand('copy'); } catch (err) { /* nothing more to try */ }
+  area.remove();
+  return copied;
+}
+$$('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+  const copied = await copyText(button.dataset.copy);
+  showToast(copied ? (button.dataset.copied || 'Copied') : `Couldn’t copy. ${button.dataset.copy}`);
+  if (!copied) return;
+  const icon = $('use', button), was = icon && icon.getAttribute('href');
+  button.classList.add('is-copied');
+  if (icon) icon.setAttribute('href', '#u-check');
+  setTimeout(() => { button.classList.remove('is-copied'); if (icon) icon.setAttribute('href', was); }, 1800);
+}));
+
+// The illustrated map swaps for a live Google map on request; Google's map only loads once asked for.
+const place = $('#place'), placeMap = $('#placeMap'), placeLive = $('#placeLive'), mapToggle = $('#mapToggle');
+if (mapToggle && mapToggle.dataset.embed) {
+  mapToggle.addEventListener('click', () => {
+    const live = !place.classList.contains('is-live');
+    if (live && !placeLive.firstChild) {
+      const frame = el('iframe', { src: mapToggle.dataset.embed, title: `Map showing ORA Space in ${D.city || 'Sri Lanka'}`, referrerpolicy: 'no-referrer-when-downgrade', allowfullscreen: '' });
+      frame.addEventListener('load', () => frame.classList.add('is-loaded'), { once: true });
+      placeLive.appendChild(frame);
+    }
+    place.classList.toggle('is-live', live);
+    mapToggle.setAttribute('aria-pressed', String(live));
+    $('span', mapToggle).textContent = live ? 'Illustrated map' : 'Live map';
+  });
+} else if (mapToggle) {
+  mapToggle.hidden = true;
+}
+
+// With a mouse: a soft light follows the pointer across each tile, and the map's layers shift a little for depth.
+if (finePointer && !reduced) {
+  $$('.tile').forEach(tile => tile.addEventListener('pointermove', e => {
+    const r = tile.getBoundingClientRect();
+    tile.style.setProperty('--mx', `${(e.clientX - r.left).toFixed(0)}px`);
+    tile.style.setProperty('--my', `${(e.clientY - r.top).toFixed(0)}px`);
+  }));
+  if (placeMap) {
+    placeMap.addEventListener('pointermove', e => {
+      const r = placeMap.getBoundingClientRect();
+      placeMap.style.setProperty('--px', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+      placeMap.style.setProperty('--py', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+    });
+    placeMap.addEventListener('pointerleave', () => { placeMap.style.setProperty('--px', '0'); placeMap.style.setProperty('--py', '0'); });
   }
 }
+
 $('#year').textContent = String(new Date().getFullYear());
 
 /* ---------------- Form ---------------- */

@@ -32,7 +32,8 @@ You need **Node.js 24** (or at least 22.12) (download the LTS version from [node
 ora-space-site/
 ├── index.html          ← all page content and copy (sections, rooms, cards, form)
 ├── src/
-│   ├── config.js       ← your details: opening date, address, contact, form endpoint
+│   ├── config.js       ← your details: opening date, address, hours, contact, form endpoint
+│   ├── details.js      ← turns config.js into the text the page shows (hours lines, links, the week)
 │   ├── main.js         ← interactions: scroll journey, rooms, day clock, cursor, menu, form
 │   ├── scene.js        ← the 3D world: arches, lanterns, trees, fireflies, sky, lighting
 │   ├── style.css       ← design system (colours, type, layout) and all section styles
@@ -56,6 +57,7 @@ ora-space-site/
 export default {
   siteUrl: 'https://oraspace.lk',  // the live address: link previews, sitemap, search engines
   openingDate: 'Saturday, 12 December 2026',
+  nowOpen: false,                  // true once ORA has opened: the Hours tile then shows live Open / Closed
   address: '3, Wewala, 1 Church Rd, Piliyandala 10300',  // exactly as on Google Business Profile
   city: 'Piliyandala',             // added to the Google title ("…in Piliyandala")
   mapsUrl: 'https://maps.app.goo.gl/…',
@@ -100,6 +102,8 @@ The "Join the Opening List" form is connected to the Formspree form `https://for
 | I want to change… | Where |
 |---|---|
 | Headlines, room descriptions, card text, the "Good to know" questions | `index.html` (search for the text) |
+| Address, hours, phone, email, social links (Visit section, footer, questions, Google's data) | `src/config.js` only. `index.html` marks where they go with placeholders such as `{{ora:email}}`, which the build fills in |
+| The Visit section's illustrated map | the `<svg class="place__art">` in `index.html` (roads, trees, the pin) |
 | The title and description Google shows | `<title>` and `<meta name="description">` at the top of `index.html` (the town from `city` is added at build time) |
 | Opening hours (the "A day at ORA" clock shows Closed outside them, and the lanterns burn low) | `opensAt` and `closesAt` in `src/config.js` |
 | The "A day at ORA" moments: name, starting hour, spaces and text | `MOMENTS` at the top of the day clock code in `src/main.js` |

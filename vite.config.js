@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import site from './src/config.js';
+import { details } from './src/details.js';
 
 /*
   npm run build          → dist/         (regular multi-file site, best for hosting)
@@ -8,7 +9,9 @@ import site from './src/config.js';
 
 const SITE_URL = String(site.siteUrl || '').trim().replace(/\/+$/, '');
 
-const escapeHtml = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const D = details(site);
+
+const escapeHtml = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 // Puts the town from src/config.js into the page wherever it says "in Sri Lanka": the search title gets just
 // the town ("…in Piliyandala", short enough to show in full), everything else gets "…in Piliyandala, Sri Lanka".
@@ -22,50 +25,55 @@ function placeInTitles() {
   };
 }
 
+// Writes ORA's details from src/config.js into index.html, so they are in the page itself:
+//   {{ora:email}} and similar placeholders become the matching value from src/details.js
+//   ({{ora:email|break}} also lets a long address wrap after its @),
+//   an element with data-needs="email" (or any other value) is hidden when that value is empty,
+//   <!-- ora:week --> becomes the seven-day opening hours list.
+function fillDetails() {
+  const week = D.openDays && ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => {
+    const open = D.openDays.includes(day);
+    return `<li class="week__day ${open ? 'is-open' : 'is-closed'}" data-day="${day}"><span class="week__name">${day}</span><span class="week__hours">${open ? escapeHtml(D.timesShort) : 'Closed'}</span></li>`;
+  }).join('');
+  return {
+    name: 'ora-fill-details',
+    transformIndexHtml: html => html
+      .replace(/<!--\s*ora:week\s*-->/g, week)
+      .replace(/\sdata-needs="(\w+)"/g, (m, key) => (D[key] ? m : `${m} hidden`))
+      .replace(/\{\{ora:(\w+)(\|break)?\}\}/g, (m, key, wrap) => {
+        if (!(key in D)) throw new Error(`index.html asks for {{ora:${key}}}, which src/details.js does not provide`);
+        const value = escapeHtml(D[key]);
+        return wrap ? value.replace(/@/g, '@<wbr>') : value;
+      })
+  };
+}
+
 // Structured data (schema.org) that tells search engines what ORA Space is: its name, what it offers,
 // logo and links, and, once an address is set, its location and opening hours (as a café and art gallery).
 function structuredData() {
   const page = SITE_URL ? `${SITE_URL}/` : undefined;
   const file = name => (SITE_URL ? `${SITE_URL}/${name}` : undefined);
-  const place = [String(site.city || '').trim(), 'Sri Lanka'].filter(Boolean).join(', ');
-  const handle = String(site.instagram || '').replace(/^@/, '').trim();
-  const hour = h => `${String(((Math.round(+h) % 24) + 24) % 24).padStart(2, '0')}:00`;
-  const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const openDays = Array.isArray(site.openDays) && site.openDays.length
-    ? DAYS.filter(d => site.openDays.some(x => String(x).trim().slice(0, 3).toLowerCase() === d.slice(0, 3).toLowerCase()))
-    : DAYS;
-  const city = String(site.city || '').trim();
-  const facebook = String(site.facebook || '').trim().replace(/#$/, '');
+  const hour = h => `${String(h).padStart(2, '0')}:00`;
   const ora = {
-    '@type': site.address ? ['CafeOrCoffeeShop', 'ArtGallery'] : 'Organization',
+    '@type': D.address ? ['CafeOrCoffeeShop', 'ArtGallery'] : 'Organization',
     '@id': page && `${page}#ora`,
     name: 'ORA Space',
     alternateName: 'ORA',
     slogan: 'Feel & Belong',
-    description: `A café, art space and creative house in a heritage walawwa in ${place}: exhibitions, a library, a studio, film nights, music and private events.`,
+    description: `A café, art space and creative house in a heritage walawwa in ${[D.city, 'Sri Lanka'].filter(Boolean).join(', ')}: exhibitions, a library, a studio, film nights, music and private events.`,
     url: page,
     logo: file('icon-512.png'),
     image: file('og-image.jpg'),
-    email: site.email || undefined,
-    telephone: site.phone || undefined,
-    sameAs: [handle && `https://www.instagram.com/${handle}/`, facebook].filter(Boolean),
+    email: D.email || undefined,
+    telephone: D.phone || undefined,
+    sameAs: [D.instagramUrl, D.facebookUrl].filter(Boolean),
     knowsAbout: ['Café', 'Art exhibitions', 'Library', 'Recording studio', 'Film screenings', 'Live music', 'Theatre', 'Private events']
   };
-  if (site.address) {
-    // "3, Wewala, 1 Church Rd, Piliyandala 10300" → street "3, Wewala, 1 Church Rd", town, postcode
-    const postalCode = (String(site.address).match(/(\d{5})\s*$/) || [])[1];
-    let street = String(site.address).replace(/\s*\d{5}\s*$/, '').trim();
-    if (city && street.toLowerCase().endsWith(city.toLowerCase())) street = street.slice(0, -city.length).replace(/[,\s]+$/, '');
-    ora.address = { '@type': 'PostalAddress', streetAddress: street, addressLocality: city || undefined, postalCode, addressCountry: 'LK' };
-    ora.hasMap = site.mapsUrl || undefined;
+  if (D.address) {
+    ora.address = { '@type': 'PostalAddress', streetAddress: D.street, addressLocality: D.city || undefined, postalCode: D.postcode || undefined, addressCountry: 'LK' };
+    ora.hasMap = D.mapsUrl || undefined;
     ora.servesCuisine = 'Coffee';
-    if (+site.opensAt !== +site.closesAt) {
-      ora.openingHoursSpecification = [{
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: openDays,
-        opens: hour(site.opensAt ?? 8), closes: hour(site.closesAt ?? 22)
-      }];
-    }
+    if (!D.allDay) ora.openingHoursSpecification = [{ '@type': 'OpeningHoursSpecification', dayOfWeek: D.openDays, opens: hour(D.opens), closes: hour(D.closes) }];
   }
   const website = { '@type': 'WebSite', '@id': page && `${page}#website`, url: page, name: 'ORA Space', alternateName: 'ORA', inLanguage: 'en', publisher: page && { '@id': `${page}#ora` } };
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': [website, ora] }).replace(/</g, '\\u003c');
@@ -186,6 +194,6 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 900,
       modulePreload: single ? false : { polyfill: true }
     },
-    plugins: single ? [formFallback(), placeInTitles(), inlineEverything()] : [formFallback(), placeInTitles(), plainStylesheet(), launchExtras()]
+    plugins: single ? [fillDetails(), formFallback(), placeInTitles(), inlineEverything()] : [fillDetails(), formFallback(), placeInTitles(), plainStylesheet(), launchExtras()]
   };
 });

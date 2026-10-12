@@ -6,7 +6,8 @@
 */
 export default {
   siteUrl: 'https://www.oraspacelk.com',   // the live address (oraspacelk.com redirects here). Used for link previews, the sitemap and search engines.
-  openingDate: '',   // e.g. 'Saturday, 12 December 2026'
+  openingDate: '',   // e.g. 'Saturday, 12 December 2026'. Shown in the Hours tile ("Opening …") until nowOpen is true
+  nowOpen: false,    // switch to true once ORA has opened: the Hours tile then shows live "Open now" or "Closed" (Sri Lanka time)
   address: '3, Wewala, 1 Church Rd, Piliyandala 10300',   // written exactly as on the Google Business Profile
   city: 'Piliyandala',   // the town. Added to the Google title ("…in Piliyandala") and descriptions ("…in Piliyandala, Sri Lanka")
   mapsUrl: 'https://share.google/ySGJPWHjN3XBPlB1x',   // the share link to ORA's Google listing
