@@ -8,14 +8,70 @@ import site from './src/config.js';
 
 const SITE_URL = String(site.siteUrl || '').trim().replace(/\/+$/, '');
 
+const escapeHtml = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+// Puts the town from src/config.js into the search title and descriptions ("…in Kandy, Sri Lanka").
+function placeInTitles() {
+  const city = String(site.city || '').trim();
+  return {
+    name: 'ora-place-in-titles',
+    transformIndexHtml: html => city
+      ? html.replace(/(<title>[^<]*|<meta (?:name="description"|property="og:description") content="[^"]*?)in Sri Lanka/g, `$1in ${escapeHtml(city)}, Sri Lanka`)
+      : html
+  };
+}
+
+// Structured data (schema.org) that tells search engines what ORA Space is: its name, what it offers,
+// logo and links, and, once an address is set, its location and opening hours (as a café and art gallery).
+function structuredData() {
+  const page = SITE_URL ? `${SITE_URL}/` : undefined;
+  const file = name => (SITE_URL ? `${SITE_URL}/${name}` : undefined);
+  const place = [String(site.city || '').trim(), 'Sri Lanka'].filter(Boolean).join(', ');
+  const handle = String(site.instagram || '').replace(/^@/, '').trim();
+  const hour = h => `${String(((Math.round(+h) % 24) + 24) % 24).padStart(2, '0')}:00`;
+  const ora = {
+    '@type': site.address ? ['CafeOrCoffeeShop', 'ArtGallery'] : 'Organization',
+    '@id': page && `${page}#ora`,
+    name: 'ORA Space',
+    alternateName: 'ORA',
+    slogan: 'Feel & Belong',
+    description: `A café, art space and creative house in a heritage walawwa in ${place}: exhibitions, a library, a studio, film nights, music and private events.`,
+    url: page,
+    logo: file('icon-512.png'),
+    image: file('og-image.jpg'),
+    email: site.email || undefined,
+    telephone: site.phone || undefined,
+    sameAs: handle ? [`https://www.instagram.com/${handle}`] : undefined,
+    knowsAbout: ['Café', 'Art exhibitions', 'Library', 'Recording studio', 'Film screenings', 'Live music', 'Theatre', 'Private events']
+  };
+  if (site.address) {
+    ora.address = { '@type': 'PostalAddress', streetAddress: site.address, addressLocality: site.city || undefined, addressCountry: 'LK' };
+    ora.hasMap = site.mapsUrl || undefined;
+    ora.servesCuisine = 'Coffee';
+    // the site gives one set of hours, so they are listed for every day of the week
+    if (+site.opensAt !== +site.closesAt) {
+      ora.openingHoursSpecification = [{
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: hour(site.opensAt ?? 8), closes: hour(site.closesAt ?? 22)
+      }];
+    }
+  }
+  const website = { '@type': 'WebSite', '@id': page && `${page}#website`, url: page, name: 'ORA Space', alternateName: 'ORA', inLanguage: 'en', publisher: page && { '@id': `${page}#ora` } };
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': [website, ora] }).replace(/</g, '\\u003c');
+}
+
 // Launch extras for the hosted build: link-preview tags (with full addresses once siteUrl is set in
-// src/config.js), the web manifest for home-screen icons, robots.txt and, with siteUrl, a sitemap.
+// src/config.js), structured data, the web manifest for home-screen icons, robots.txt and, with siteUrl, a sitemap.
 function launchExtras() {
   const address = file => (SITE_URL ? `${SITE_URL}/${file}` : `./${file}`);
   return {
     name: 'ora-launch-extras',
     transformIndexHtml() {
       const tags = [
+        // Google shows favicons in results only at multiples of 48px, so offer the 192px icon as well
+        { tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '192x192', href: './icon-192.png' } },
+        { tag: 'script', attrs: { type: 'application/ld+json' }, children: structuredData() },
         { tag: 'meta', attrs: { property: 'og:site_name', content: 'ORA Space' } },
         { tag: 'meta', attrs: { property: 'og:image', content: address('og-image.jpg') } },
         { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
@@ -114,6 +170,6 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 900,
       modulePreload: single ? false : { polyfill: true }
     },
-    plugins: single ? [formFallback(), inlineEverything()] : [formFallback(), plainStylesheet(), launchExtras()]
+    plugins: single ? [formFallback(), placeInTitles(), inlineEverything()] : [formFallback(), placeInTitles(), plainStylesheet(), launchExtras()]
   };
 });

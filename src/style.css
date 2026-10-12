@@ -154,7 +154,7 @@ main, .foot { position: relative; z-index: 2; }
 .cursor { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .has-cursor .cursor { display: block; position: fixed; inset: 0 auto auto 0; z-index: 160; pointer-events: none; transition: opacity .3s; }
-  .has-cursor, .has-cursor a, .has-cursor button, .has-cursor label, .has-cursor [role="slider"] { cursor: none; }
+  .has-cursor, .has-cursor a, .has-cursor button, .has-cursor label, .has-cursor summary, .has-cursor [role="slider"] { cursor: none; }
   .has-cursor input, .has-cursor textarea { cursor: text; }
 }
 .cursor__dot, .cursor__ring { position: fixed; left: 0; top: 0; border-radius: 50%; will-change: transform; }
@@ -437,6 +437,23 @@ html:not(.js) .rooms__stage::before { display: none; }
 .card__cta::after { content: "→"; font-family: var(--f-display); font-size: 1.1rem; letter-spacing: 0; transition: transform .5s var(--ease); }
 .card:hover .card__cta::after { transform: translateX(6px); }
 
+/* ---------- Good to know (questions) ---------- */
+.faq { position: relative; padding-block: clamp(70px, 10vh, 120px); background: var(--ink); }
+.faq__grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.faq__head { min-width: 0; }
+.faq__lede { color: var(--ivory-2); margin: 0; max-width: 30rem; }
+.faq__list { min-width: 0; border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__item summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1.4rem; padding: 1.15rem 0; }
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after { content: ""; flex: none; width: 10px; height: 10px; margin: -5px 4px 0 0; border-right: 1.5px solid var(--gold); border-bottom: 1.5px solid var(--gold); transform: rotate(45deg); transition: transform .5s var(--ease), margin .5s var(--ease); }
+.faq__item[open] summary::after { transform: rotate(-135deg); margin-top: 5px; }
+.faq__item summary h3 { margin: 0; font-weight: 400; font-size: clamp(1.2rem, 1.05rem + .5vw, 1.5rem); line-height: 1.3; transition: color .3s; }
+.faq__item summary:hover h3, .faq__item[open] summary h3 { color: var(--gold-lt); }
+.faq__a { padding: 0 2rem 1.3rem 0; animation: fadeUp .6s var(--ease); }
+.faq__a p { margin: 0; color: var(--ivory-2); max-width: 40rem; }
+.faq__a a { color: var(--gold-lt); text-decoration-color: var(--line-2); text-underline-offset: 4px; }
+
 /* ---------- Visit ---------- */
 .visit { position: relative; padding-block: clamp(80px, 12vh, 140px); background: radial-gradient(ellipse 70% 60% at 85% 30%, rgba(15, 61, 42, .7), transparent 70%), var(--ink); }
 .visit__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
@@ -528,7 +545,7 @@ html:not(.js) .rooms__stage::before { display: none; }
   :root { --nav-h: 68px; }
   .nav__links { display: none; }
   .nav__toggle { display: grid; }
-  .house__grid, .visit__grid { grid-template-columns: minmax(0, 1fr); }
+  .house__grid, .visit__grid, .faq__grid { grid-template-columns: minmax(0, 1fr); }
   .house__art { order: -1; max-width: 560px; margin-inline: auto; width: 100%; }
   .day__grid { grid-template-columns: minmax(0, 1fr); }
   .day__grid .dial { order: -1; }

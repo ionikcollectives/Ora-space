@@ -54,6 +54,7 @@ ora-space-site/
 ```js
 export default {
   siteUrl: 'https://oraspace.lk',  // the live address: link previews, sitemap, search engines
+  city: 'Kandy',                   // the town, added to the Google title ("…in Kandy, Sri Lanka")
   openingDate: 'Saturday, 12 December 2026',
   address: 'No. 12, Old Lane, Kandy',
   mapsUrl: 'https://maps.app.goo.gl/…',
@@ -92,7 +93,8 @@ The "Join the Opening List" form is connected to the Formspree form `https://for
 
 | I want to change… | Where |
 |---|---|
-| Headlines, room descriptions, card text | `index.html` (search for the text) |
+| Headlines, room descriptions, card text, the "Good to know" questions | `index.html` (search for the text) |
+| The title and description Google shows | `<title>` and `<meta name="description">` at the top of `index.html` (the town from `city` is added at build time) |
 | Opening hours (the "A day at ORA" clock shows Closed outside them, and the lanterns burn low) | `opensAt` and `closesAt` in `src/config.js` |
 | The "A day at ORA" moments: name, starting hour, spaces and text | `MOMENTS` at the top of the day clock code in `src/main.js` |
 | Brand colours and fonts | the `:root` block at the top of `src/style.css` |
@@ -140,7 +142,7 @@ Besides the page itself, `dist/` contains the link-preview image, home-screen ic
 - **Reduced motion:** visitors who prefer it get a calm, static version.
 - **No-WebGL fallback:** browsers without 3D get a gradient page with a drawn gold arch. All content still works.
 - **Adaptive quality:** on slow devices the scene drops its bloom glow, then lowers its resolution, to stay smooth.
-- **Link previews and search:** a share image, home-screen icons, and (with `siteUrl`) a canonical address and sitemap.
+- **Search (SEO):** a search title and description naming what ORA is and where; structured data (schema.org) telling Google it is a café and art gallery, with its address, hours and Instagram once those are set in `src/config.js`; a "Good to know" section answering the questions people search for; a canonical address and sitemap (with `siteUrl`); a share image for link previews; and a favicon size Google shows in results.
 - **Accessible:** skip link, keyboard-operable menu, rooms and day clock (arrow keys move an hour, Page Up and Page Down three hours, Home and End go to midnight and 11 pm), labelled form with inline errors.
 
 For testing, adding `?still` to the URL makes the camera snap into position instead of easing.

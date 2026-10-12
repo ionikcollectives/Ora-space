@@ -112,7 +112,7 @@ function finishLoader() {
 }
 (function runLoader() {
   const start = performance.now();
-  const minTime = reduced ? 150 : 1500;
+  const minTime = reduced ? 150 : 1100;
   // Wait for the fonts and for the 3D scene to finish compiling, so the intro starts without a stutter.
   let assetsReady = false;
   const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : null;
@@ -417,7 +417,7 @@ document.addEventListener('mouseout', e => {
 });
 document.addEventListener('pointerover', e => {
   if (!e.target.closest) return;
-  const t = e.target.closest('a, button, [role="slider"], label, input, textarea, [data-cursor], .dial__clock');
+  const t = e.target.closest('a, button, summary, [role="slider"], label, input, textarea, [data-cursor], .dial__clock');
   const label = t && t.closest('[data-cursor]') ? t.closest('[data-cursor]').dataset.cursor : (t && t.closest('.dial__clock') ? 'Drag' : '');
   // over text fields the regular text cursor takes over
   cursor.classList.toggle('is-text', !!e.target.closest('input:not([type="checkbox"]), textarea'));
@@ -530,6 +530,12 @@ const handle = (CFG.instagram || '').replace(/^@/, '').trim();
 const digits = (CFG.phone || '').replace(/[^\d]/g, '');
 if (CFG.openingDate) $('#factOpening').textContent = CFG.openingDate;
 $('#factHours').textContent = CFG.hours || (OPENS === CLOSES ? 'Open around the clock.' : `${fmtLong(OPENS)} to ${fmtLong(CLOSES)}`);
+// the "Good to know" answers follow the same settings as the clock and the Visit details
+const place = [CFG.city, 'Sri Lanka'].filter(Boolean).join(', ');
+$('#faqHours').textContent = OPENS === CLOSES ? 'Once open, the house is open around the clock.' : `Once open, the house is open from ${fmtLong(OPENS)} to ${fmtLong(CLOSES)}.`;
+$('#faqWhere').textContent = CFG.address
+  ? `ORA Space is at ${CFG.address}, in a heritage walawwa among old trees in ${place}.`
+  : `In a heritage walawwa among old trees in ${place}. The full address goes to the Opening List first and is shared here at launch.`;
 if (CFG.address) {
   const dd = $('#factWhere'); dd.textContent = '';
   dd.appendChild(el('span', {}, CFG.address));
